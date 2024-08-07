@@ -1,4 +1,4 @@
-package data.api.json;
+package api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,15 +6,20 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-public class FinedustApiClient {
-    public static void main(String[] args) throws IOException {
-    	try {
-	        StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty"); /*URL*/
+public class FinedustApi {
+	public List<String[]> fetchData(String apiUrl) throws IOException {
+		// 리스트 생성
+    	List<String[]> dataList = new ArrayList<>();
+		
+		try {
+	        StringBuilder urlBuilder = new StringBuilder(apiUrl); /*URL*/
 	        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=/kA0qzwVocsZ3Gt64ehI0l0NE87BtrVI21Lg1VvUsm/7C9Eq5JxrgejyiJNS6zinJX67naoxH57/0sXY4dx10A=="); /*Service Key*/
 	        urlBuilder.append("&" + URLEncoder.encode("returnType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*json*/
 	        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100", "UTF-8")); /*한 페이지 결과 수*/
@@ -61,14 +66,19 @@ public class FinedustApiClient {
 	            String pm10Grade = item.getString("pm10Grade"); // 미세먼지 등급
 	            String pm25Grade = item.getString("pm25Grade"); // 초미세먼지 등급
 
+	            // 데이터 추가
+	            dataList.add(new String[] {dataTime, pm10Grade, pm25Grade});
 	            
-	            // 콘솔 출력
-	            System.out.println("dataTime: " + dataTime);
-                System.out.println("pm10Grade: " + pm10Grade);
-                System.out.println("pm25Grade: " + pm25Grade);
+				/*
+				 * // 콘솔 출력 System.out.println("dataTime: " + dataTime);
+				 * System.out.println("pm10Grade: " + pm10Grade);
+				 System.out.println("pm25Grade: " + pm25Grade);
+				 */
+
 	        }
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
+		return dataList;
     }
 }

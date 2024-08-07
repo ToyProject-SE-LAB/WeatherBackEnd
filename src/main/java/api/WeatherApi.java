@@ -1,4 +1,4 @@
-package data.api.json;
+package api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,22 +8,27 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class WeatherApiClient {
-    public static void main(String[] args) throws IOException {
+public class WeatherApi {
+	public List<String[]> fetchData(String apiUrl) throws IOException {
+		// 리스트 생성
+    	List<String[]> dataList = new ArrayList<>();
+		
     	try {
     		// 현재 날짜(yyyymmdd) 얻기
     		LocalDate currentDate = LocalDate.now();
     		String baseDate = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-    		System.out.println(baseDate);
     		
-	        StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"); /*URL*/
+    		
+	        StringBuilder urlBuilder = new StringBuilder(apiUrl); /*URL*/
 	        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=/kA0qzwVocsZ3Gt64ehI0l0NE87BtrVI21Lg1VvUsm/7C9Eq5JxrgejyiJNS6zinJX67naoxH57/0sXY4dx10A=="); /*Service Key*/
 	        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
 	        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("1000", "UTF-8")); /*한 페이지 결과 수*/
@@ -81,43 +86,33 @@ public class WeatherApiClient {
 			    dataMap.put(category, fcstValue);
 			    forecastData.put(dateTimeKey, dataMap);
 			}
-			    // 저장된 데이터 출력
+			// 저장된 데이터 출력
 			for(String dateTimeKey : forecastData.keySet()) {
 			    Map<String, String> dataMap = forecastData.get(dateTimeKey);
-			    String sky = dataMap.get("SKY"); // 하늘상태
 			    String tmp = dataMap.get("TMP"); // 온도
 			    String pop = dataMap.get("POP"); // 강수확률
 			    String wsd = dataMap.get("WSD"); // 풍속
 			    String reh = dataMap.get("REH"); // 습도
-			    
-			    // 하늘상태 데이터
-			    String skyCondition = "";
-			    if(sky != null) {
-			    	if(sky.equals("1")) {
-			    		skyCondition = "맑음";
-			    	} else if(sky.equals("2")) {
-			    		skyCondition = "구름많음";
-			    	} else if(sky.equals("3")) {
-			    		skyCondition = "흐림";
-			    	}
-			    }
-			    
-			    String resultTmp = (tmp == null) ? "" : ("온도: " + tmp + "°C");
-	            String resultPop = (pop == null) ? "" : ("강수확률: " + pop + "%");
-	            String resultWsd = (wsd == null) ? "" : ("풍속: " + wsd + "m/s");
-	            String resultReh = (reh == null) ? "" : ("습도: " + reh + "%");
+
+			    // 데이터 저장
+			    String resultTmp = (tmp == null) ? "" : (tmp + "°C");
+	            String resultPop = (pop == null) ? "" : (pop + "%");
+	            String resultWsd = (wsd == null) ? "" : (wsd + "m/s");
+	            String resultReh = (reh == null) ? "" : (reh + "%");
+	            
+	         // 데이터 추가
+	            dataList.add(new String[] {dateTimeKey, resultTmp, resultPop, resultWsd, resultReh});
 			    
 	            // 콘솔 출력
-			    System.out.println("날짜: " + dateTimeKey);
-			    System.out.println("하늘상태: " + skyCondition);
-			    System.out.println(resultTmp);
-			    System.out.println(resultPop);
-			    System.out.println(resultWsd);
-			    System.out.println(resultReh);
+//			    System.out.println("날짜: " + dateTimeKey);
+//			    System.out.println(resultTmp);
+//			    System.out.println(resultPop);
+//			    System.out.println(resultWsd);
+//			    System.out.println(resultReh);
 			}
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
-
+    	return dataList;
     }
 }
