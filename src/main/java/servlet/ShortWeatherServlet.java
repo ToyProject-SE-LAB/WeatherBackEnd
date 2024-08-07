@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import api.ShortWeatherApi;
-import main.java.vo.ShortWeatherVO;
+import main.java.vo.ShortWeatherInfo;
 
 @WebServlet("/weather")
-public class WeatherServlet extends HttpServlet {
+public class ShortWeatherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String short_apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
@@ -21,9 +21,9 @@ public class WeatherServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ShortWeatherApi shortApi = new ShortWeatherApi();
 		
-		Map<String, ShortWeatherVO> shortDataList;
+		Map<String, ShortWeatherInfo> shortDataList;
 		try {
-			shortDataList = shortApi.fatchData(short_apiUrl);
+			shortDataList = shortApi.fetchData(short_apiUrl);
 			
 			request.setAttribute("shortDataList", shortDataList);
 		

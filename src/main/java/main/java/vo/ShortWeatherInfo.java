@@ -1,6 +1,6 @@
 package main.java.vo;
 
-public class ShortWeatherVO {
+public class ShortWeatherInfo {
     private int locationCode;
     private String date; // 날짜
     private String time; // 시각

@@ -62,12 +62,12 @@ public class FinedustApi {
 
 	        for (int i = 0; i < items.length(); i++) {
 	            JSONObject item = items.getJSONObject(i);
-	            String dataTime = item.getString("dataTime"); // 측정일
+	            String date = item.getString("dataTime"); // 측정일
 	            String pm10Grade = item.getString("pm10Grade"); // 미세먼지 등급
 	            String pm25Grade = item.getString("pm25Grade"); // 초미세먼지 등급
 
 	            // 데이터 추가
-	            dataList.add(new String[] {dataTime, pm10Grade, pm25Grade});
+	            dataList.add(new String[] {date, pm10Grade, pm25Grade});
 	        }
     	} catch(IOException e) {
     		e.printStackTrace();

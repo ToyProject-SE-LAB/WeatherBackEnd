@@ -18,14 +18,14 @@
             <th>REH</th>
             <th>WSD</th>
         </tr>
-        <c:forEach var="entry" items="${shortDataList}">
+        <c:forEach var="data" items="${shortDataList}">
             <tr>
-                <td>${entry.value.date} ${entry.value.time}</td>
-                <td>${entry.value.SKY}</td>
-                <td>${entry.value.PTY}</td>
-                <td>${entry.value.TMP}</td>
-                <td>${entry.value.REH}</td>
-                <td>${entry.value.WSD}</td>
+                <td>${data.value.date} ${data.value.time}</td>
+                <td>${data.value.SKY}</td>
+                <td>${data.value.PTY}</td>
+                <td>${data.value.TMP}</td>
+                <td>${data.value.REH}</td>
+                <td>${data.value.WSD}</td>
             </tr>
         </c:forEach>
     </table>

@@ -14,7 +14,7 @@ import java.util.TreeMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import main.java.vo.ShortWeatherVO;
+import main.java.vo.ShortWeatherInfo;
 
 public class ShortWeatherApi {
 	
@@ -23,9 +23,9 @@ public class ShortWeatherApi {
 		SKY, PTY, TMP, REH, WSD
 	}
 
-	public Map<String, ShortWeatherVO> fatchData(String apiUrl) throws Exception {
+	public Map<String, ShortWeatherInfo> fetchData(String apiUrl) throws Exception {
 		// 시간순으로 데이터 저장
-        Map<String, ShortWeatherVO> forecastData = new TreeMap<>();
+        Map<String, ShortWeatherInfo> forecastData = new TreeMap<>();
 		
     	try {    		
     		// 현재 날짜(yyyymmdd) 얻기
@@ -91,7 +91,7 @@ public class ShortWeatherApi {
                     continue; 
                 }
                 
-                ShortWeatherVO weather = forecastData.getOrDefault(dateTimeKey, new ShortWeatherVO());
+                ShortWeatherInfo weather = forecastData.getOrDefault(dateTimeKey, new ShortWeatherInfo());
                 
                 // 데이터를 해당 필드에 저장
 			    switch(weatherValue) {
