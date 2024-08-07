@@ -5,31 +5,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>날씨</title>
+    <title>Weather Data</title>
 </head>
 <body>
-	<h3>날씨 데이터</h3>
-	<table border="1">
-        <thead>
+    <h1>Weather Data</h1>
+    <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>SKY</th>
+            <th>PTY</th>
+            <th>TMP</th>
+            <th>REH</th>
+            <th>WSD</th>
+        </tr>
+        <c:forEach var="entry" items="${shortDataList}">
             <tr>
-                <th>날짜</th>
-                <th>온도</th>
-                <th>강수확률</th>
-                <th>풍속</th>
-                <th>습도</th>
+                <td>${entry.value.date} ${entry.value.time}</td>
+                <td>${entry.value.SKY}</td>
+                <td>${entry.value.PTY}</td>
+                <td>${entry.value.TMP}</td>
+                <td>${entry.value.REH}</td>
+                <td>${entry.value.WSD}</td>
             </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="data" items="${dataList}">
-                <tr>
-                    <td>${data[0]}</td>
-                    <td>${data[1]}</td>
-                    <td>${data[2]}</td>
-                    <td>${data[3]}</td>
-                    <td>${data[4]}</td>
-                </tr>
-            </c:forEach>
-        </tbody>
+        </c:forEach>
     </table>
 </body>
 </html>

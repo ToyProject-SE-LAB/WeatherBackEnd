@@ -25,7 +25,7 @@ public class FinedustServlet extends HttpServlet {
 		request.setAttribute("dataList", dataList);
 		
 		// jsp로 포워딩
-		request.getRequestDispatcher("/finedusrData_form.jsp").forward(request, response);
+		request.getRequestDispatcher("/FinedustData_form.jsp").forward(request, response);
 	}
 
 }

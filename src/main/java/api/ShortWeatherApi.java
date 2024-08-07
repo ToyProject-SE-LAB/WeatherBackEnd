@@ -8,21 +8,26 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class WeatherApi {
-	public List<String[]> fetchData(String apiUrl) throws IOException {
-		// 리스트 생성
-    	List<String[]> dataList = new ArrayList<>();
+import main.java.vo.ShortWeatherVO;
+
+public class ShortWeatherApi {
+	
+	// 기상 데이터 종류
+	enum WeatherValue {
+		SKY, PTY, TMP, REH, WSD
+	}
+
+	public Map<String, ShortWeatherVO> fatchData(String apiUrl) throws Exception {
+		// 시간순으로 데이터 저장
+        Map<String, ShortWeatherVO> forecastData = new TreeMap<>();
 		
-    	try {
+    	try {    		
     		// 현재 날짜(yyyymmdd) 얻기
     		LocalDate currentDate = LocalDate.now();
     		String baseDate = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -34,7 +39,7 @@ public class WeatherApi {
 	        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("1000", "UTF-8")); /*한 페이지 결과 수*/
 	        urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*요청자료형식 JSON*/
 	        urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /*현재날짜*/
-	        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode("0500", "UTF-8")); /*0500 시각*/
+	        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode("0200", "UTF-8")); /*0500 시각*/
 	        urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode("55", "UTF-8")); /*예보지점의 X 좌표값*/
 	        urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode("127", "UTF-8")); /*예보지점의 Y 좌표값*/
 	        
@@ -61,7 +66,7 @@ public class WeatherApi {
 	        rd.close();
 	        conn.disconnect();
 	        
-	        // System.out.println(sb.toString());
+	        //System.out.println(sb.toString());
 	        
 	     // 데이터 파싱
 			JSONObject jsonObject = new JSONObject(sb.toString());
@@ -69,50 +74,52 @@ public class WeatherApi {
 			JSONObject body = response.getJSONObject("body");
 			JSONObject items = body.getJSONObject("items");
 	        JSONArray itemArray = items.getJSONArray("item");
-			
-	        // 예보 시간별로 데이터를 저장할 맵
-	        Map<String, Map<String, String>> forecastData = new TreeMap<>();
-	        
+				        
 			for (int i = 0; i < itemArray.length(); i++) {
 				JSONObject item = itemArray.getJSONObject(i);
-				String fcstDate = item.getString("fcstDate"); // 측정값
-                String fcstTime = item.getString("fcstTime"); // 날짜
-			    String fcstValue = item.getString("fcstValue"); // 예보 값
+				String fcstDate = item.getString("fcstDate"); // 날짜
+                String fcstTime = item.getString("fcstTime"); // 시간
+                String fcstValue = item.getString("fcstValue"); // 예보 값
 			    String category = item.getString("category"); // 자료구분문자
-			    
-			    // 예보 시간 키
 			    String dateTimeKey = fcstDate + " " + fcstTime;
-			    Map<String, String> dataMap = forecastData.getOrDefault(dateTimeKey, new HashMap<>());
-			    dataMap.put(category, fcstValue);
-			    forecastData.put(dateTimeKey, dataMap);
-			}
-			// 저장된 데이터 출력
-			for(String dateTimeKey : forecastData.keySet()) {
-			    Map<String, String> dataMap = forecastData.get(dateTimeKey);
-			    String tmp = dataMap.get("TMP"); // 온도
-			    String pop = dataMap.get("POP"); // 강수확률
-			    String wsd = dataMap.get("WSD"); // 풍속
-			    String reh = dataMap.get("REH"); // 습도
-
-			    // 데이터 저장
-			    String resultTmp = (tmp == null) ? "" : (tmp + "°C");
-	            String resultPop = (pop == null) ? "" : (pop + "%");
-	            String resultWsd = (wsd == null) ? "" : (wsd + "m/s");
-	            String resultReh = (reh == null) ? "" : (reh + "%");
-	            
-	         // 데이터 추가
-	            dataList.add(new String[] {dateTimeKey, resultTmp, resultPop, resultWsd, resultReh});
 			    
-	            // 콘솔 출력
-//			    System.out.println("날짜: " + dateTimeKey);
-//			    System.out.println(resultTmp);
-//			    System.out.println(resultPop);
-//			    System.out.println(resultWsd);
-//			    System.out.println(resultReh);
+			    WeatherValue weatherValue;
+                try {
+                	weatherValue = WeatherValue.valueOf(category);
+                } catch (IllegalArgumentException e) {
+                	// 정의되지 않은 category 값일 경우
+                    continue; 
+                }
+                
+                ShortWeatherVO weather = forecastData.getOrDefault(dateTimeKey, new ShortWeatherVO());
+                
+                // 데이터를 해당 필드에 저장
+			    switch(weatherValue) {
+			    	case SKY: // 하늘상태
+			    		weather.setSKY(fcstValue);
+			    		break;
+			    	case PTY: // 강수형태
+			    		weather.setPTY(fcstValue);
+			    		break;
+			    	case TMP: // 온도
+			    		weather.setTMP(fcstValue);
+			    		break;
+			    	case REH: //습도
+			    		weather.setREH(fcstValue);
+			    		break;
+			    	case WSD: // 풍속
+			    		weather.setWSD(fcstValue);
+			    		break;
+			    }
+			    
+			    weather.setDate(fcstDate);
+                weather.setTime(fcstTime);
+
+                forecastData.put(dateTimeKey, weather);
 			}
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
-    	return dataList;
+    	return forecastData;
     }
 }
