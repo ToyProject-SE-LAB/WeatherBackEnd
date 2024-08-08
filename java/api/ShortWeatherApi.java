@@ -20,7 +20,7 @@ public class ShortWeatherApi {
 	
 	// 기상 데이터 종류
 	enum WeatherValue {
-		SKY, PTY, TMP, REH, WSD
+		SKY, PTY, POP, TMP, REH, WSD
 	}
 
 	public Map<String, ShortWeatherInfo> fetchData(String apiUrl) throws Exception {
@@ -39,7 +39,7 @@ public class ShortWeatherApi {
 	        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("1000", "UTF-8")); /*한 페이지 결과 수*/
 	        urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*요청자료형식 JSON*/
 	        urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /*현재날짜*/
-	        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode("0200", "UTF-8")); /*0500 시각*/
+	        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode("0500", "UTF-8")); /*0500 시각*/
 	        urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode("55", "UTF-8")); /*예보지점의 X 좌표값*/
 	        urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode("127", "UTF-8")); /*예보지점의 Y 좌표값*/
 	        
@@ -100,6 +100,9 @@ public class ShortWeatherApi {
 			    		break;
 			    	case PTY: // 강수형태
 			    		weather.setPTY(fcstValue);
+			    		break;
+			    	case POP: // 강수확률
+			    		weather.setPOP(fcstValue);
 			    		break;
 			    	case TMP: // 온도
 			    		weather.setTMP(fcstValue);

@@ -6,6 +6,7 @@ public class ShortWeatherInfo {
     private String time; // 시각
     private String SKY; // 하늘상태
     private String PTY; // 강수형태    
+    private String POP; // 강수확률    
     private String TMP; // 온도
     private String REH; // 습도
     private String WSD; // 풍속
@@ -72,6 +73,18 @@ public class ShortWeatherInfo {
 
 
 
+	public String getPOP() {
+		return POP;
+	}
+
+
+
+	public void setPOP(String pOP) {
+		POP = pOP;
+	}
+
+
+
 	public String getTMP() {
 		return TMP;
 	}
@@ -115,6 +128,7 @@ public class ShortWeatherInfo {
                 "\ntime = " + time +
                 "\nSKY = " + SKY +
                 "\nPTY = " + PTY +
+                "\nPOP = " + POP +
                 "\nTMP = " + TMP +
                 "\nREH = " + REH +
                 "\nWSD = " + WSD;

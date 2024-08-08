@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import api.ShortWeatherApi;
 import main.java.vo.ShortWeatherInfo;
 
-@WebServlet("/weather")
+@WebServlet("/shortweather")
 public class ShortWeatherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -28,7 +28,7 @@ public class ShortWeatherServlet extends HttpServlet {
 			request.setAttribute("shortDataList", shortDataList);
 		
 			// jsp로 포워딩
-			request.getRequestDispatcher("/WeatherData_form.jsp").forward(request, response);
+			request.getRequestDispatcher("/weatherData_form.jsp").forward(request, response);
 
 		} catch (Exception e) {
 			e.printStackTrace();
