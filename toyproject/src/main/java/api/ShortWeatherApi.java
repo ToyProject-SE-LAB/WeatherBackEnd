@@ -9,13 +9,15 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import main.java.vo.ShortWeatherInfo;
+import dto.MidWeatherDto;
+import dto.ShortWeatherDto;
+
 
 public class ShortWeatherApi {
 	
@@ -24,11 +26,8 @@ public class ShortWeatherApi {
 		SKY, PTY, POP, TMP, REH, WSD, TMN, TMX
 	}
 	
-	public Map<String, ShortWeatherInfo> fetchData(String x, String y) throws Exception {
-		
-		// 시간순으로 데이터 저장
-        Map<String, ShortWeatherInfo> forecastData = new TreeMap<>();
-		
+	public List<ShortWeatherDto> fetchData(String x, String y) throws Exception {
+
     	try {    		
     		// 현재 날짜(yyyymmdd) 얻기
     		LocalDate currentDate = LocalDate.now();
@@ -87,7 +86,8 @@ public class ShortWeatherApi {
                 String fcstTime = item.getString("fcstTime"); // 시간
                 String fcstValue = item.getString("fcstValue"); // 예보 값
 			    String category = item.getString("category"); // 자료구분문자
-			    String dateTimeKey = fcstDate + " " + fcstTime;
+			    
+			    List<ShortWeatherDto> shortList = new ArrayList<>();
 			    
 			    WeatherValue weatherValue;
                 try {
@@ -97,7 +97,7 @@ public class ShortWeatherApi {
                     continue; 
                 }
 
-                ShortWeatherInfo weather = forecastData.getOrDefault(dateTimeKey, new ShortWeatherInfo());
+                ShortWeatherDto weather = new ShortWeatherDto();
                 
                 // 데이터를 해당 필드에 저장
 			    switch(weatherValue) {
@@ -127,15 +127,12 @@ public class ShortWeatherApi {
 			    		break;
 			    }
 			    
-			    weather.setDate(fcstDate);
-                weather.setTime(fcstTime);
-
-                forecastData.put(dateTimeKey, weather);
-                }
+			    shortList = add(weather);
+			}
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
-    	return forecastData;
+    	return shortList;
     }
 
 	// 현재 시각을 기준으로 base_time 구하기

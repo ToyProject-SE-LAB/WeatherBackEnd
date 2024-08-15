@@ -9,34 +9,22 @@ public class MidWeatherDto {
     public String getDate() {
 		return date;
 	}
-
-
 	public void setDate(String date) {
 		this.date = date;
 	}
 
-
 	public String getSky() {
 		return sky;
 	}
-
-
 	public void setSky(String sky) {
 		this.sky = sky;
 	}
 
-
 	public String getPop() {
 		return pop;
 	}
-
-
 	public void setPop(String pop) {
 		this.pop = pop;
 	}
 
-    @Override
-    public String toString() {
-        return "date=" + date + ", sky=" + sky + ", pop=" + pop + "";
-    }
 }

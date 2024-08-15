@@ -6,23 +6,22 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import main.java.vo.MidWeatherInfo;
+import dto.MidWeatherDto;
 
 public class MidWeatherApi {
-    public List<MidWeatherInfo> midWeatherData(String regId) throws IOException {
-    	List<MidWeatherInfo> weatherList = new ArrayList<>();
+    public List<MidWeatherDto> midWeatherData(String regId) throws IOException {
+
     	try {
 	    	// 현재 날짜(yyyymmddHHmm) 얻기
 			String base_date = getBaseDate(LocalDate.now(), LocalTime.now());
@@ -66,6 +65,8 @@ public class MidWeatherApi {
 	     	JSONObject body = response.getJSONObject("body");
 	     	JSONObject items = body.getJSONObject("items");
 	     	JSONArray itemArray = items.getJSONArray("item");
+	     	
+	     	List<MidWeatherDto> weatherList = new ArrayList<>();
 	     	
 	     	HashMap<String, String> sky = new HashMap<>(); // 하늘상태
 	     	HashMap<String, String> pop = new HashMap<>(); // 강수확률

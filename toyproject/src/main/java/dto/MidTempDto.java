@@ -9,7 +9,6 @@ public class MidTempDto {
     public String getDate() {
 		return date;
 	}
-
 	public void setDate(String date) {
 		this.date = date;
 	}
@@ -17,7 +16,6 @@ public class MidTempDto {
 	public String getTaMax() {
 		return taMax;
 	}
-
 	public void setTaMax(String taMax) {
 		this.taMax = taMax;
 	}
@@ -25,15 +23,8 @@ public class MidTempDto {
 	public String getTaMin() {
 		return taMin;
 	}
-
 	public void setTaMin(String taMin) {
 		this.taMin = taMin;
 	}
    
-   
-  
-    @Override
-    public String toString() {
-        return "date=" + date + ", taMax=" + taMax + ", taMin=" + taMin + "";
-    }
 }

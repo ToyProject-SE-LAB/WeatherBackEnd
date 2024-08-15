@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import main.java.vo.LocationInfo;
+import vo.LocationInfo;
 
 public class ExcelReader {
     private static final String FILE_NAME = "location.xlsx";

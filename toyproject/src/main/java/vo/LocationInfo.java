@@ -1,4 +1,4 @@
-package main.java.vo;
+package vo;
 
 public class LocationInfo {
 	private String regionCode; // 행정구역코드
@@ -101,26 +101,20 @@ public class LocationInfo {
 		this.midTempCode = midTempCode;
 	}
 
-
 	public String getStationName() {
 		return stationName;
 	}
-
 
 	public void setStationName(String stationName) {
 		this.stationName = stationName;
 	}
 
-
 	public String getMidWeatherCode() {
 		return midWeatherCode;
 	}
 
-
 	public void setMidWeatherCode(String midWeatherCode) {
 		this.midWeatherCode = midWeatherCode;
 	}
-	
-	
-	
+
 }

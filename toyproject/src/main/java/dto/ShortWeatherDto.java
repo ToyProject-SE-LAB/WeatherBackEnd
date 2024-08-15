@@ -18,129 +18,76 @@ public class ShortWeatherDto {
 	public int getLocationCode() {
 		return locationCode;
 	}
-
-
-
 	public void setLocationCode(int locationCode) {
 		this.locationCode = locationCode;
 	}
 
-
-
 	public String getDate() {
 		return date;
 	}
-
-
-
 	public void setDate(String date) {
 		this.date = date;
 	}
 
-
-
 	public String getTime() {
 		return time;
 	}
-
-
-
 	public void setTime(String time) {
 		this.time = time;
 	}
 
-
-
 	public String getSKY() {
 		return SKY;
 	}
-
-
-
 	public void setSKY(String sKY) {
 		SKY = sKY;
 	}
 
-
-
 	public String getPTY() {
 		return PTY;
 	}
-
-
-
 	public void setPTY(String pTY) {
 		PTY = pTY;
 	}
 
-
-
 	public String getPOP() {
 		return POP;
 	}
-
-
-
 	public void setPOP(String pOP) {
 		POP = pOP;
 	}
 
-
-
 	public String getTMP() {
 		return TMP;
 	}
-
-
-
 	public void setTMP(String tMP) {
 		TMP = tMP;
 	}
 
-
-
 	public String getREH() {
 		return REH;
 	}
-
-
-
 	public void setREH(String rEH) {
 		REH = rEH;
 	}
 
-
-
 	public String getWSD() {
 		return WSD;
 	}
-
-
-
 	public void setWSD(String wSD) {
 		WSD = wSD;
 	}
 
-
-
 	public String getTMN() {
 		return TMN;
 	}
-
-
-
 	public void setTMN(String tMN) {
 		TMN = tMN;
 	}
 
-
-
 	public String getTMX() {
 		return TMX;
 	}
-
-
-
 	public void setTMX(String tMX) {
 		TMX = tMX;
 	}

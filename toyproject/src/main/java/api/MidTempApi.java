@@ -19,11 +19,11 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import main.java.vo.MidTempInfo;
+import dto.MidTempDto;
 
 public class MidTempApi {
-	public List<MidTempInfo> midTempData(String regId) throws IOException {
-    	List<MidTempInfo> tempList = new ArrayList<>();
+	public List<MidTempDto> midTempData(String regId) throws IOException {
+
     	try {
 	    	// 현재 날짜(yyyymmdd) 얻기
 			String base_date = getBaseDate(LocalDate.now(), LocalTime.now());
@@ -67,6 +67,8 @@ public class MidTempApi {
 	     	JSONObject body = response.getJSONObject("body");
 	     	JSONObject items = body.getJSONObject("items");
 	     	JSONArray itemArray = items.getJSONArray("item");
+	     	
+	     	List<MidTempDto> tempList = new ArrayList<>();
 	     	
 	     	HashMap<String, String> taMax = new HashMap<>(); // 최고기온
 	     	HashMap<String, String> taMin = new HashMap<>(); // 최저기온
