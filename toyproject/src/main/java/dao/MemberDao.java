@@ -11,7 +11,7 @@ import java.util.List;
 import dto.MemberDto;
 
 public class MemberDao {
-
+	
     // 데이터베이스 연결 메소드
     public static Connection getConnection() throws SQLException {
         try {
