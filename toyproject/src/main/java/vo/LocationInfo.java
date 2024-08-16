@@ -1,4 +1,4 @@
-package main.java.vo;
+package vo;
 
 public class LocationInfo {
 	private String regionCode; // 행정구역코드

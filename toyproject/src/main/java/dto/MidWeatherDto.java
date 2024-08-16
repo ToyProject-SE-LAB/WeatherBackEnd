@@ -35,8 +35,4 @@ public class MidWeatherDto {
 		this.pop = pop;
 	}
 
-    @Override
-    public String toString() {
-        return "date=" + date + ", sky=" + sky + ", pop=" + pop + "";
-    }
 }
