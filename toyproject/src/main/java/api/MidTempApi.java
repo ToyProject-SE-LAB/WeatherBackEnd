@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import main.java.vo.MidTempInfo;
+import vo.MidTempInfo;
 
 public class MidTempApi {
 	public List<MidTempInfo> midTempData(String regId) throws IOException {

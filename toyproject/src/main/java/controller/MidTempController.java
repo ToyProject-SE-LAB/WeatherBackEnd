@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import api.MidTempApi;
-import main.java.vo.LocationInfo;
-import main.java.vo.MidTempInfo;
 import util.ExcelReader;
+import vo.LocationInfo;
+import vo.MidTempInfo;
 
 @WebServlet("/midtemp")
 public class MidTempController extends HttpServlet {

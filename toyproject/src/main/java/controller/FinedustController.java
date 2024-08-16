@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import api.FinedustApi;
-import main.java.vo.LocationInfo;
+import vo.LocationInfo;
 import util.ExcelReader;
 
 @WebServlet("/finedust")

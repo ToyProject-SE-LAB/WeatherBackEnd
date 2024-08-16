@@ -18,7 +18,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import main.java.vo.MidWeatherInfo;
+import vo.MidWeatherInfo;
 
 public class MidWeatherApi {
     public List<MidWeatherInfo> midWeatherData(String regId) throws IOException {

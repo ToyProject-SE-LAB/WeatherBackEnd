@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import api.MidWeatherApi;
-import main.java.vo.LocationInfo;
-import main.java.vo.MidWeatherInfo;
 import util.ExcelReader;
+import vo.LocationInfo;
+import vo.MidWeatherInfo;
 
 @WebServlet("/midweather")
 public class MidWeatherController extends HttpServlet {

@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import api.ShortWeatherApi;
-import main.java.vo.LocationInfo;
-import main.java.vo.ShortWeatherInfo;
 import util.ExcelReader;
+import vo.LocationInfo;
+import vo.ShortWeatherInfo;
 
 @WebServlet("/shortweather")
 public class ShortWeatherController extends HttpServlet {

@@ -1,4 +1,4 @@
-package main.java.vo;
+package vo;
 
 public class MidWeatherInfo {
     private String date; // 예보날짜(오전, 오후)
