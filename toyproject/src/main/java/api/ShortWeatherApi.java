@@ -14,7 +14,6 @@ import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import main.java.vo.ShortWeatherInfo;
 
 public class ShortWeatherApi {
