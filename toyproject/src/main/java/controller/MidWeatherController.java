@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import api.MidWeatherApi;
 import main.java.vo.LocationInfo;
+import main.java.vo.MidWeatherInfo;
 import util.ExcelReader;
 
 @WebServlet("/midweather")

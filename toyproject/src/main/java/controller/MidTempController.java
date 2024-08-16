@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import api.MidTempApi;
 import main.java.vo.LocationInfo;
+import main.java.vo.MidTempInfo;
 import util.ExcelReader;
 
 @WebServlet("/midtemp")

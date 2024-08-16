@@ -11,10 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import api.ShortWeatherApi;
 import main.java.vo.LocationInfo;
+import main.java.vo.ShortWeatherInfo;
 import util.ExcelReader;
 
 @WebServlet("/shortweather")
-public class ShortWeatherControll extends HttpServlet {
+public class ShortWeatherController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private ExcelReader excelReader;
