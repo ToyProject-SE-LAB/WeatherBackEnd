@@ -127,18 +127,18 @@ public class WeatherController extends HttpServlet {
 	}
 
 	private void handleMidTemp(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try {
-
-            String midCode = locationInfo.getMidTempCode(); // 중기기온코드값
-            
-            List<MidTempInfo> tempDataList = midTempApi.midTempData(midCode);
-			
-			request.setAttribute("tempDataList", tempDataList);
-			// jsp로 포워딩
-			request.getRequestDispatcher("/MidTempTest.jsp").forward(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//
+//            String midCode = locationInfo.getMidTempCode(); // 중기기온코드값
+//            
+//            List<MidTempInfo> tempDataList = midTempApi.midTempData(midCode);
+//			
+//			request.setAttribute("tempDataList", tempDataList);
+//			// jsp로 포워딩
+//			request.getRequestDispatcher("/MidTempTest.jsp").forward(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 
