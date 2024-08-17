@@ -35,17 +35,26 @@ public class WeatherController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-    	super.init();
-        String apiKey = "AIzaSyAEOsOkR5QXRzz4Kjk2QDcJg3jpqdINwEE";
-        String midTempCodeCsv = getServletContext().getRealPath("/midTempCode.csv");
-        String midWeatherCodeCsv = getServletContext().getRealPath("/midWeatherCode.CSV");
-        regionCode = new RegionCode(apiKey, midTempCodeCsv, midWeatherCodeCsv);
-        
-        finedustApi = new FinedustApi(); 
-        finedustStationApi = new FinedustStationApi(); 
-        shortWeatherApi = new ShortWeatherApi(); 
-        midWeatherApi = new MidWeatherApi(); 
-        midTempApi = new MidTempApi();  
+        super.init();
+        try {
+            String apiKey = "AIzaSyAEOsOkR5QXRzz4Kjk2QDcJg3jpqdINwEE";
+
+            // 클래스패스에서 리소스 파일 경로 지정
+            String midTempCsv = "midTempCode.csv";
+            String midWeatherCsv = "midWeatherCode.csv";
+
+            // RegionCode 객체 초기화
+            regionCode = new RegionCode(apiKey, midTempCsv, midWeatherCsv);
+
+            // API 객체 초기화
+            finedustApi = new FinedustApi();
+            finedustStationApi = new FinedustStationApi();
+            shortWeatherApi = new ShortWeatherApi();
+            midWeatherApi = new MidWeatherApi();
+            midTempApi = new MidTempApi();
+        } catch (Exception e) {
+            throw new ServletException("Error initializing WeatherController", e);
+        }
     }
 	
 
