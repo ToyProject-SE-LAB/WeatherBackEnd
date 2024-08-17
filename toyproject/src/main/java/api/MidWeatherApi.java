@@ -58,7 +58,7 @@ public class MidWeatherApi {
 	        rd.close();
 	        conn.disconnect();
 	        
-	        System.out.println(sb.toString());
+	        //System.out.println(sb.toString());
 	        
 	        // 데이터 파싱
 	     	JSONObject jsonObject = new JSONObject(sb.toString());

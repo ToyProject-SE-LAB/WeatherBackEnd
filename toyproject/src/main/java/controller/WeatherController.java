@@ -14,8 +14,6 @@ import api.FinedustApi;
 import api.MidTempApi;
 import api.MidWeatherApi;
 import api.ShortWeatherApi;
-import util.ExcelReader;
-import vo.LocationInfo;
 import vo.MidTempInfo;
 import vo.MidWeatherInfo;
 import vo.ShortWeatherInfo;
@@ -24,7 +22,6 @@ import vo.ShortWeatherInfo;
 public class WeatherController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	private ExcelReader excelReader;
 	private FinedustApi finedustApi;
     private ShortWeatherApi shortWeatherApi;
     private MidWeatherApi midWeatherApi;
@@ -32,7 +29,6 @@ public class WeatherController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        excelReader = new ExcelReader();
         finedustApi = new FinedustApi(); 
         shortWeatherApi = new ShortWeatherApi(); 
         midWeatherApi = new MidWeatherApi(); 
@@ -70,56 +66,44 @@ public class WeatherController extends HttpServlet {
         }
 	}
 
-	// 위치 정보 찾는 메소드
-	private LocationInfo getLocationInfoFromRequest(HttpServletRequest request) throws IOException {
-		// 사용자의 현재 위도와 경도 값을 Geolocation API로부터 받는다.
-		double latitude = Double.parseDouble(request.getParameter("latitude"));
-        double longitude = Double.parseDouble(request.getParameter("longitude"));
-        return excelReader.findClosestLocation(latitude, longitude);
-    }
-
 	private void handleFinedust(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try {
-            // 위치 정보를 찾는 메소드 호출
-            LocationInfo locationInfo = getLocationInfoFromRequest(request);
-            if (locationInfo == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Location not found.");
-                return;
-            }
-            
-            String stationName = locationInfo.getStationName(); // 측정소명
-            
-
-            List<String[]> dataList = finedustApi.fetchData(stationName);
-    			
-    		request.setAttribute("dataList", dataList);
-    		request.setAttribute("locationInfo", locationInfo); // 위치 정보 전달
-  			// jsp로 포워딩
-    		request.getRequestDispatcher("/FinedustData_form.jsp").forward(request, response);       
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//
+//            
+//            String stationName = locationInfo.getStationName(); // 측정소명
+//            
+//
+//            List<String[]> dataList = finedustApi.fetchData(stationName);
+//    			
+//    		request.setAttribute("dataList", dataList);
+//    		request.setAttribute("locationInfo", locationInfo); // 위치 정보 전달
+//  			// jsp로 포워딩
+//    		request.getRequestDispatcher("/FinedustData_form.jsp").forward(request, response);       
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	private void handleShortWeather(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
-            // 위치 정보를 찾는 메소드 호출
-            LocationInfo locationInfo = getLocationInfoFromRequest(request);
-            if (locationInfo == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Location not found.");
-                return;
-            }
-            
-            String x = locationInfo.getX(); // x 좌표값
-            String y = locationInfo.getY(); // y 좌표값
+            String x = request.getParameter("x"); // x 좌표값
+            String y = request.getParameter("y"); // y 좌표값
             
             // 날씨 정보를 가져온다.
         	Map<String, ShortWeatherInfo> shortDataList = shortWeatherApi.fetchData(x, y);
         	
+        	if (shortDataList != null) {
+                System.out.println("Fetched weather data:");
+                for (Map.Entry<String, ShortWeatherInfo> entry : shortDataList.entrySet()) {
+                    System.out.println("Date: " + entry.getKey() + ", Weather Info: " + entry.getValue().getTMP() + "°C");
+                }
+            } else {
+                System.out.println("No weather data found.");
+            }
+        	
             // JSP로 데이터 포워딩
             request.setAttribute("shortDataList", shortDataList); // 날씨 정보 전달
-            request.setAttribute("locationInfo", locationInfo); // 위치 정보 전달
-            request.getRequestDispatcher("/weatherData_form.jsp").forward(request, response);
+            request.getRequestDispatcher("/WeatherData_form.jsp").forward(request, response);
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -127,47 +111,41 @@ public class WeatherController extends HttpServlet {
 	}
 
 	private void handleMidWeather(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try {
-            // 위치 정보를 찾는 메소드 호출
-            LocationInfo locationInfo = getLocationInfoFromRequest(request);
-            if (locationInfo == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Location not found.");
-                return;
-            }
-            
-            String midCode = locationInfo.getMidWeatherCode(); // 중기예보코드값
-            
-            List<MidWeatherInfo> weatherDataList = midWeatherApi.midWeatherData(midCode);
-			
-			request.setAttribute("weatherDataList", weatherDataList);
-			request.setAttribute("locationInfo", locationInfo); // 위치 정보 전달
-			// jsp로 포워딩
-			request.getRequestDispatcher("/MidWeatherTest.jsp").forward(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//
+//            String midCode = locationInfo.getMidWeatherCode(); // 중기예보코드값
+//            
+//            List<MidWeatherInfo> weatherDataList = midWeatherApi.midWeatherData(midCode);
+//			
+//			request.setAttribute("weatherDataList", weatherDataList);
+//			request.setAttribute("locationInfo", locationInfo); // 위치 정보 전달
+//			// jsp로 포워딩
+//			request.getRequestDispatcher("/MidWeatherTest.jsp").forward(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	private void handleMidTemp(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try {
-            // 위치 정보를 찾는 메소드 호출
-            LocationInfo locationInfo = getLocationInfoFromRequest(request);
-            if (locationInfo == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Location not found.");
-                return;
-            }
-            
-            String midCode = locationInfo.getMidTempCode(); // 중기기온코드값
-            
-            List<MidTempInfo> tempDataList = midTempApi.midTempData(midCode);
-			
-			request.setAttribute("tempDataList", tempDataList);
-			request.setAttribute("locationInfo", locationInfo); // 위치 정보 전달
-			// jsp로 포워딩
-			request.getRequestDispatcher("/MidTempTest.jsp").forward(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//            // 위치 정보를 찾는 메소드 호출
+//            LocationInfo locationInfo = getLocationInfoFromRequest(request);
+//            if (locationInfo == null) {
+//                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Location not found.");
+//                return;
+//            }
+//            
+//            String midCode = locationInfo.getMidTempCode(); // 중기기온코드값
+//            
+//            List<MidTempInfo> tempDataList = midTempApi.midTempData(midCode);
+//			
+//			request.setAttribute("tempDataList", tempDataList);
+//			request.setAttribute("locationInfo", locationInfo); // 위치 정보 전달
+//			// jsp로 포워딩
+//			request.getRequestDispatcher("/MidTempTest.jsp").forward(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 

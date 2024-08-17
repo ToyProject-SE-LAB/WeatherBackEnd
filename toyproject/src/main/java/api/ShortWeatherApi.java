@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ShortWeatherApi {
 	}
 	
 	public Map<String, ShortWeatherInfo> fetchData(String x, String y) throws Exception {
+		System.out.println("ShortWeatherApi() 실행");
 		
 		// 시간순으로 데이터 저장
         Map<String, ShortWeatherInfo> forecastData = new TreeMap<>();
@@ -71,7 +73,7 @@ public class ShortWeatherApi {
 	        rd.close();
 	        conn.disconnect();
 	        
-	        System.out.println(sb.toString());
+	        //System.out.println(sb.toString());
 	        
 	        // 데이터 파싱
 			JSONObject jsonObject = new JSONObject(sb.toString());
@@ -80,6 +82,9 @@ public class ShortWeatherApi {
 			JSONObject items = body.getJSONObject("items");
 	        JSONArray itemArray = items.getJSONArray("item");
 	        
+	        // 현재 시간과 12시간 후 시간 계산
+	        LocalDateTime now = LocalDateTime.now().minusHours(1);
+	        LocalDateTime dayLater = now.plusHours(24);
 				        
 			for (int i = 0; i < itemArray.length(); i++) {
 				JSONObject item = itemArray.getJSONObject(i);
@@ -88,14 +93,21 @@ public class ShortWeatherApi {
                 String fcstValue = item.getString("fcstValue"); // 예보 값
 			    String category = item.getString("category"); // 자료구분문자
 			    String dateTimeKey = fcstDate + " " + fcstTime;
+			    DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd HHmm");
+
 			    
-			    WeatherValue weatherValue;
-                try {
-                	weatherValue = WeatherValue.valueOf(category);
-                } catch (IllegalArgumentException e) {
-                	// 정의되지 않은 category 값일 경우
-                    continue; 
-                }
+			    // 날짜 및 시간을 LocalDateTime으로 변환
+	            LocalDateTime forecastDateTime = LocalDateTime.parse(dateTimeKey, FORMATTER);
+
+	            // 현재 시간과 12시간 후 시간 사이의 데이터만 저장
+	            if (forecastDateTime.isAfter(now) && forecastDateTime.isBefore(dayLater)) {
+	                WeatherValue weatherValue;
+	                try {
+	                    weatherValue = WeatherValue.valueOf(category);
+	                } catch (IllegalArgumentException e) {
+	                    // 정의되지 않은 category 값일 경우
+	                    continue;
+	                }
 
                 ShortWeatherInfo weather = forecastData.getOrDefault(dateTimeKey, new ShortWeatherInfo());
                 
@@ -131,7 +143,8 @@ public class ShortWeatherApi {
                 weather.setTime(fcstTime);
 
                 forecastData.put(dateTimeKey, weather);
-                }
+	            }
+			}
     	} catch(IOException e) {
     		e.printStackTrace();
     	}

@@ -9,7 +9,6 @@
 </head>
 <body>
     <h1>현재 위치 날씨정보</h1>
-    <h3>현재 위치: ${locationInfo.province} ${locationInfo.city} ${locationInfo.district}</h3>
 
     <table border="1">
         <tr>
@@ -26,7 +25,7 @@
         <c:forEach var="entry" items="${shortDataList}">
             <tr>
                 <td>${entry.key}</td>
-                <td>${entry.value.SKY}</td>
+                <td>${entry.value.SKY}</td> 
                 <td>${entry.value.PTY}</td>
                 <td>${entry.value.POP}</td>
                 <td>${entry.value.TMP}</td>

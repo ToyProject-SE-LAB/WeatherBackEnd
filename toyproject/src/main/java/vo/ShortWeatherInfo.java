@@ -2,7 +2,6 @@ package vo;
 
 public class ShortWeatherInfo {
 	
-    private int locationCode;
     private String date; // 날짜
     private String time; // 시각
     private String SKY; // 하늘상태
@@ -16,18 +15,6 @@ public class ShortWeatherInfo {
 
     
     
-	public int getLocationCode() {
-		return locationCode;
-	}
-
-
-
-	public void setLocationCode(int locationCode) {
-		this.locationCode = locationCode;
-	}
-
-
-
 	public String getDate() {
 		return date;
 	}
