@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko" data-bs-theme="auto">
+<head>
+  <script src="/docs/5.3/assets/js/color-modes.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, 그리고 Bootstrap 기여자들">
+  <meta name="generator" content="Hugo 0.122.0">
+  <title>설정 페이지</title>
+  <link rel="canonical" href="https://getbootstrap.kr/docs/5.3/examples/dropdowns/">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="dropdowns.css" rel="stylesheet">
+</head>
+<body>
+  <!--미세먼지, 오늘의 날씨-->
+  <div class="d-flex justify-content-center gap-2">
+    <span
+      class="badge d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill">
+      <img class="rounded-circle me-1" width="24" height="24"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0SsVgG_uJcDfEnwygr9NQcZvG8OKvCAppOQ&s" alt="">
+      미세먼지
+    </span>
+    <span
+      class="badge d-flex align-items-center p-1 pe-2 text-success-emphasis bg-success-subtle border border-success-subtle rounded-pill">
+      <img class="rounded-circle me-1" width="24" height="24"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUMwEADdF0xvALJKG2vu_Zx9ZcWtK5OlcLHQ&s" alt="">
+      오늘의 날씨
+    </span>
+  </div>
+
+  <!--온도 설정-->
+  <div class="container-fluid">
+    <div class="bg-body-tertiary border rounded-3 position-relative p-5">
+      <div class="d-flex flex-column flex-md-row align-items-start">
+        <!-- 온도 설정 -->
+        <div class="dropdown-menu d-block position-static pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px"
+          data-bs-theme="light" style="margin-right: auto;">
+          <form class="p-2 mb-2 bg-body-tertiary border-bottom">
+            <input type="search" class="form-control" autocomplete="false" placeholder="온도 설정">
+          </form>
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                <span class="d-inline-block bg-danger rounded-circle p-1"></span>
+                28℃ ~
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                <span class="d-inline-block bg-success rounded-circle p-1"></span>
+                27℃ ~ 23℃
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                <span class="d-inline-block bg-success rounded-circle p-1"></span>
+                22℃ ~ 20℃
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                <span class="d-inline-block bg-info rounded-circle p-1"></span>
+                19℃ ~ 12℃
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                <span class="d-inline-block bg-info rounded-circle p-1"></span>
+                11℃ ~ 5℃
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                <span class="d-inline-block bg-primary rounded-circle p-1"></span>
+                ~ 4℃
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 이미지 카드 -->
+        <div class="d-flex flex-column align-items-center mx-auto">
+          <div class="card" style="width: 18rem; margin-bottom: 10px;">
+            <img src="https://thumbnail.10x10.co.kr/webimage/image/basic600/275/B002752267.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
+              class="card-img-top" alt="...">
+            <div class="card-body">
+            </div>
+          </div>
+
+          <div class="card" style="width: 18rem;">
+            <img src="https://www.ocokorea.com//upload/images/product/100/100395/Product_1680795982322.jpg"
+              class="card-img-top" alt="...">
+            <div class="card-body">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+</html>
+
