@@ -12,11 +12,13 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import vo.FinedustInfo;
+
 
 public class FinedustApi {
-	public List<String[]> fetchData(String stationName) throws IOException {
+	public List<FinedustInfo> fetchData(String stationName) throws IOException {
 		// 리스트 생성
-    	List<String[]> dataList = new ArrayList<>();
+    	List<FinedustInfo> dataList = new ArrayList<>();
 		
 		try {
 	        StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty"); /*URL*/
@@ -68,8 +70,8 @@ public class FinedustApi {
 	            String pm10Grade = item.getString("pm10Grade"); // 미세먼지 등급
 	            String pm25Grade = item.getString("pm25Grade"); // 초미세먼지 등급
 
-	            // 데이터 추가
-	            dataList.add(new String[] {date, pm10Grade, pm25Grade});
+	            FinedustInfo finedustInfo = new FinedustInfo(date, pm10Grade, pm25Grade);
+                dataList.add(finedustInfo);
 	        }
     	} catch(IOException e) {
     		e.printStackTrace();

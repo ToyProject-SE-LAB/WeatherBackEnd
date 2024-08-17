@@ -5,21 +5,21 @@
 <html>
 <head>
 <meta charset="UTF-8">
-    <title>Mid Weather Data</title>
+<title>Finedust Data</title>
 </head>
 <body>
-    <h1>Mid Weather Data</h1>
+	<h1>Finedust Data</h1>
     <table border="1">
         <tr>
-            <th>Date</th>
-            <th>SKY</th>
-            <th>POP</th>
+            <th>DateTime</th>
+            <th>pm10Grade</th>
+            <th>pm25Grade</th>
         </tr>
-        <c:forEach var="data" items="${weatherDataList}">
+        <c:forEach var="data" items="${dataList}">
             <tr>
                 <td>${data.date}</td>
-                <td>${data.sky}</td>
-                <td>${data.pop}</td>
+                <td>${data.pm10Grade}</td>
+                <td>${data.pm25Grade}</td>
             </tr>
         </c:forEach>
     </table>

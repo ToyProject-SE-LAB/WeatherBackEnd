@@ -9,7 +9,6 @@
 </head>
 <body>
     <h1>Mid Temp Data</h1>
-    <h3>현재 위치: ${locationInfo.province} ${locationInfo.city} ${locationInfo.district} ${locationInfo.midTempCode}</h3>
  
     <table border="1">
         <tr>
