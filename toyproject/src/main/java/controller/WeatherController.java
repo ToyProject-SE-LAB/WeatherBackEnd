@@ -161,7 +161,7 @@ public class WeatherController extends HttpServlet {
 			
             // 위도와 경도를 사용하여 지역 코드 얻기
             String[] regionCodes = regionCode.getRegionCodes(latitude, longitude); // 중기예보코드값
-            String midTempCode = regionCodes[1];
+            String midTempCode = regionCodes[0];
             System.out.println(midTempCode);
             
             List<MidTempInfo> tempDataList = midTempApi.midTempData(midTempCode);

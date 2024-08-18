@@ -13,8 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class RegionCode {
-    private Map<String, String> midTempCode = new HashMap<>();
-    private Map<String, String> midWeatherCode = new HashMap<>();
+    private Map<String, String> midTempCode = new HashMap<>();		// 중기기온지역코드 
+    private Map<String, String> midWeatherCode = new HashMap<>();	// 중기육상지역코드
     private String apiKey;
 
     public RegionCode(String apiKey, String midTempCsv, String midWeatherCsv) {
@@ -23,14 +23,14 @@ public class RegionCode {
         loadRegionCodes(midWeatherCsv, midWeatherCode);
     }
 
+    // csv파일에서 지역코드 정보 로드
     private void loadRegionCodes(String csvFilePath, Map<String, String> regionCodeMap) {
-        System.out.println("Attempting to load resource: " + csvFilePath);
         InputStream is = getClass().getClassLoader().getResourceAsStream(csvFilePath);
         if (is == null) {
             System.out.println("Resource not found: " + csvFilePath);
             return;
         }
-               
+
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -43,63 +43,43 @@ public class RegionCode {
                     System.out.println("Skipping invalid line: " + line);
                 }
             }
-            System.out.println("Loaded region codes from " + csvFilePath + ": " + regionCodeMap);
         } catch (IOException e) {
             System.err.println("Error loading resource: " + csvFilePath);
             e.printStackTrace();
         }
     }
 
+    // 지역명에 대응하는 육상, 기온지역코드를 배열로 반환
     public String[] getRegionCodes(double latitude, double longitude) {
         String regionName = getRegionNameByCoordinates(latitude, longitude);
         System.out.println("Region name for coordinates (" + latitude + ", " + longitude + "): " + regionName);
 
-        // Log the map contents and the result to verify
-        System.out.println("MidTempCode Map: " + midTempCode);
-        System.out.println("MidWeatherCode Map: " + midWeatherCode);
-        
         String tempCode = getCodeForRegion(regionName, midTempCode, true);
         String weatherCode = getCodeForRegion(regionName, midWeatherCode, false);
 
-        System.out.println("Temperature Code: " + tempCode);
-        System.out.println("Weather Code: " + weatherCode);
+        System.out.println("기온코드: " + tempCode);
+        System.out.println("육상코드: " + weatherCode);
         return new String[]{tempCode, weatherCode};
     }
 
+    // 지역명에 해당하는 지역코드 반환
     private String getCodeForRegion(String regionName, Map<String, String> regionCodeMap, boolean isTempCode) {
-        if (isTempCode) {
-            // For temperature code, we want to match names ending with '시'
-            String simplifiedRegionName = simplifyRegionNameForTemp(regionName);
-            return regionCodeMap.getOrDefault(simplifiedRegionName, "코드 없음");
-        } else {
-            // For weather code, use the region name directly
-            String simplifiedRegionName = simplifyRegionNameForWeather(regionName);
-            return regionCodeMap.getOrDefault(simplifiedRegionName, "코드 없음");
-        }
-    }
-
-    private String simplifyRegionNameForTemp(String fullRegionName) {
-        if (fullRegionName.endsWith("시")) {
-            return fullRegionName;
-        }
-        return fullRegionName.replaceAll("(시|구|군)$", "");
-    }
-
-    private String simplifyRegionNameForWeather(String fullRegionName) {
-        // Remove unnecessary parts, if any
-        if (fullRegionName.endsWith("도") || fullRegionName.endsWith("도 ")) {
-            return fullRegionName.trim();
-        }
-        // Handle specific cases for '도' endings
-        String[] possibleSuffixes = {"도", "시", "구", "군"};
-        for (String suffix : possibleSuffixes) {
-            if (fullRegionName.endsWith(suffix)) {
-                return fullRegionName.replace(suffix, "").trim();
+        String[] parts = regionName.split(" ");
+        if (parts.length == 2) {
+            if (isTempCode) {
+                // 시 이름 사용
+                String city = parts[1];
+                return regionCodeMap.getOrDefault(city, "코드 없음");
+            } else {
+                // 도 이름 사용
+                String province = parts[0];
+                return regionCodeMap.getOrDefault(province, "코드 없음");
             }
         }
-        return fullRegionName.trim();
+        return "코드 없음";
     }
 
+    // 지역명 찾기
     private String getRegionNameByCoordinates(double latitude, double longitude) {
         String requestUrl = String.format(
             "https://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&key=%s&language=ko",
@@ -120,31 +100,33 @@ public class RegionCode {
             }
             in.close();
 
-            // Parse the JSON response to extract the region name
+            // 파싱
             JSONObject jsonResponse = new JSONObject(response.toString());
             JSONArray results = jsonResponse.getJSONArray("results");
             if (results.length() > 0) {
                 JSONObject result = results.getJSONObject(0);
                 JSONArray addressComponents = result.getJSONArray("address_components");
-                String administrativeAreaLevel1 = null;
-                String locality = null;
+                String administrativeAreaLevel1 = null;  // 도
+                String locality = null;  // 시
+                
                 for (int i = 0; i < addressComponents.length(); i++) {
                     JSONObject component = addressComponents.getJSONObject(i);
                     JSONArray types = component.getJSONArray("types");
                     String longName = component.getString("long_name");
-                    
+
                     if (types.toString().contains("administrative_area_level_1")) {
-                        administrativeAreaLevel1 = longName;
+                        administrativeAreaLevel1 = longName;  // 도 이름 저장
                     } else if (types.toString().contains("locality")) {
-                        locality = longName;
+                        locality = extractSimpleRegionName(longName);  // 시 이름 저장
                     }
                 }
 
-                // If locality is found, return it; otherwise, fall back to administrative area level 1
-                if (locality != null) {
-                    return extractSimpleRegionName(locality); // Return locality which is usually the city or town name
+                if (locality != null && administrativeAreaLevel1 != null) {
+                	// XX도 XX시 형태로 반환
+                    return administrativeAreaLevel1 + " " + locality; 
                 } else if (administrativeAreaLevel1 != null) {
-                    return extractSimpleRegionName(administrativeAreaLevel1); // Return administrative area if locality is not available
+                    // 시 이름이 없으면 도 이름만 반환
+                	return administrativeAreaLevel1;  
                 }
             }
         } catch (Exception e) {
@@ -152,7 +134,7 @@ public class RegionCode {
         }
         return "Unknown";
     }
-
+    
     private String extractSimpleRegionName(String fullRegionName) {
         if (fullRegionName.endsWith("시") || fullRegionName.endsWith("구") || fullRegionName.endsWith("군")) {
             return fullRegionName.replaceAll("(시|구|군)$", "");
