@@ -99,7 +99,6 @@ public class WeatherController extends HttpServlet {
             
             String stationName = finedustStationApi.fetchData(x, y); // 측정소명
             
-
             FinedustInfo[] finedustData = finedustApi.fetchData(stationName);
     			
             // jsp로 포워딩
