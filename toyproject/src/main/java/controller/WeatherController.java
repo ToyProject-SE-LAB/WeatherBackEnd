@@ -15,7 +15,6 @@ import api.MidWeatherApi;
 import api.ShortWeatherApi;
 import service.Coordinate;
 import service.RegionCode;
-import vo.FinedustInfo;
 import vo.MidTempInfo;
 import vo.MidWeatherInfo;
 import vo.ShortWeatherInfo;
@@ -99,11 +98,12 @@ public class WeatherController extends HttpServlet {
             
             String stationName = finedustStationApi.fetchData(x, y); // 측정소명
             
-            FinedustInfo[] finedustData = finedustApi.fetchData(stationName);
-    			
-            // jsp로 포워딩
-    		request.setAttribute("dataList", finedustData);
-    		request.getRequestDispatcher("/FinedustData_form.jsp").forward(request, response);       
+            String jsonData = finedustApi.fetchDataAsJson(stationName);
+
+            // JSON 응답 설정
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(jsonData);   
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

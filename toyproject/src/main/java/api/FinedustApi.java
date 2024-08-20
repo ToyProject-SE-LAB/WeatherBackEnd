@@ -78,4 +78,24 @@ public class FinedustApi {
     	}
 		return finedustArray;
     }
+	
+	// json으로 변환
+	public String fetchDataAsJson(String stationName) throws IOException {
+		FinedustInfo[] finedustArray = fetchData(stationName);
+	        
+	    if (finedustArray == null) {
+	    	return new JSONObject().toString(); // 빈 JSON 객체 반환
+	    }
+
+	    JSONArray jsonArray = new JSONArray();
+	    	for (FinedustInfo info : finedustArray) {
+	    		JSONObject jsonObject = new JSONObject();
+	            jsonObject.put("date", info.getDate());
+	            jsonObject.put("pm10Grade", info.getPm10Grade());
+	            jsonObject.put("pm25Grade", info.getPm25Grade());
+	            jsonArray.put(jsonObject);
+	        }
+
+	        return jsonArray.toString();
+	    }
 }

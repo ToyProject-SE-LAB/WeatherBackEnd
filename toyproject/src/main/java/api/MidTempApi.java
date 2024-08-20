@@ -122,6 +122,26 @@ public class MidTempApi {
     	}
     	return tempArray;
     }
+	
+	// json으로 변환
+	public String fetchDataAsJson(String stationName) throws IOException {
+		MidTempInfo[] tempArray = midTempData(stationName);
+		        
+		if (tempArray == null) {
+			return new JSONObject().toString(); // 빈 JSON 객체 반환
+		}
+
+		JSONArray jsonArray = new JSONArray();
+		for (MidTempInfo info : tempArray) {
+			JSONObject jsonObject = new JSONObject();
+		    jsonObject.put("date", info.getDate());
+		    jsonObject.put("taMax", info.getTaMax());
+		    jsonObject.put("taMin", info.getTaMin());
+		    jsonArray.put(jsonObject);
+		}
+
+		return jsonArray.toString();
+	}
 
 	private String getBaseDate(LocalDate currentDate, LocalTime currentTime) {
 		// 날짜 포맷터 및 시간 포맷터

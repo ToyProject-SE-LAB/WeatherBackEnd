@@ -148,6 +148,33 @@ public class ShortWeatherApi {
     	ShortWeatherInfo[] weatherArray = weatherList.toArray(new ShortWeatherInfo[0]);
     	return weatherArray;
     }
+	
+	// json으로 변환
+	public String fetchDataAsJson(String x, String y) throws Exception {
+		ShortWeatherInfo[] weatherArray = fetchData(x, y);
+		        
+		if (weatherArray == null) {
+			return new JSONObject().toString(); // 빈 JSON 객체 반환
+		}
+
+		JSONArray jsonArray = new JSONArray();
+		for (ShortWeatherInfo info : weatherArray) {
+			JSONObject jsonObject = new JSONObject();
+		    jsonObject.put("date", info.getDate());
+		    jsonObject.put("time", info.getTime());
+		    jsonObject.put("sky", info.getSKY());
+		    jsonObject.put("pop", info.getPTY());
+		    jsonObject.put("pop", info.getPOP());
+		    jsonObject.put("pop", info.getTMP());
+		    jsonObject.put("pop", info.getREH());
+		    jsonObject.put("pop", info.getWSD());
+		    jsonObject.put("pop", info.getTMN());
+		    jsonObject.put("pop", info.getTMX());
+		    jsonArray.put(jsonObject);
+		}
+
+		return jsonArray.toString();
+	}
 
 	// 현재 시각을 기준으로 base_time 구하기
 	private String getClosestBaseTime(LocalTime currentTime) {

@@ -122,6 +122,26 @@ public class MidWeatherApi {
     	}
     	return weatherArray;
     }
+    
+	// json으로 변환
+	public String fetchDataAsJson(String stationName) throws IOException {
+		MidWeatherInfo[] weatherArray = midWeatherData(stationName);
+		        
+		if (weatherArray == null) {
+			return new JSONObject().toString(); // 빈 JSON 객체 반환
+		}
+
+		JSONArray jsonArray = new JSONArray();
+		for (MidWeatherInfo info : weatherArray) {
+			JSONObject jsonObject = new JSONObject();
+		    jsonObject.put("date", info.getDate());
+		    jsonObject.put("sky", info.getSky());
+		    jsonObject.put("pop", info.getPop());
+		    jsonArray.put(jsonObject);
+		}
+
+		return jsonArray.toString();
+	}
 
 	private String getBaseDate(LocalDate currentDate, LocalTime currentTime) {
 		// 날짜 포맷터 및 시간 포맷터

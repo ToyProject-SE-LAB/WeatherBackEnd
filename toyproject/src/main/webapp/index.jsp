@@ -41,7 +41,7 @@
                         console.log('Finedust Data:', finedustData);
 
                         // 예: shortWeatherData를 기반으로 리디렉션
-                        window.location.href = midTempUrl;
+                        window.location.href = shortWeatherUrl;
                     })
                     .catch(error => {
                         console.error('Error:', error);
