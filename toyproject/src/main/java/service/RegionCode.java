@@ -123,9 +123,11 @@ public class RegionCode {
 
                 if (locality != null && administrativeAreaLevel1 != null) {
                 	// XX도 XX시 형태로 반환
+                	System.out.println(administrativeAreaLevel1 + " " + locality);
                     return administrativeAreaLevel1 + " " + locality; 
                 } else if (administrativeAreaLevel1 != null) {
                     // 시 이름이 없으면 도 이름만 반환
+                	System.out.println(administrativeAreaLevel1);
                 	return administrativeAreaLevel1;  
                 }
             }

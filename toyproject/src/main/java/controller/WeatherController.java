@@ -15,9 +15,6 @@ import api.MidWeatherApi;
 import api.ShortWeatherApi;
 import service.Coordinate;
 import service.RegionCode;
-import vo.MidTempInfo;
-import vo.MidWeatherInfo;
-import vo.ShortWeatherInfo;
 
 @WebServlet({ "/finedust", "/midtemp", "/midweather", "/shortweather" })
 public class WeatherController extends HttpServlet {
@@ -99,6 +96,7 @@ public class WeatherController extends HttpServlet {
             String stationName = finedustStationApi.fetchData(x, y); // 측정소명
             
             String jsonData = finedustApi.fetchDataAsJson(stationName);
+            System.out.println(jsonData);
 
             // JSON 응답 설정
             response.setContentType("application/json");
@@ -120,11 +118,13 @@ public class WeatherController extends HttpServlet {
 	        String y = String.valueOf(coord.getY());
 	        
             // 날씨 정보를 가져온다.
-        	ShortWeatherInfo[] shortDataList = shortWeatherApi.fetchData(x, y);
+        	String jsonData = shortWeatherApi.fetchDataAsJson(x, y);
+        	System.out.println(jsonData);
         	
-            // JSP로 데이터 포워딩
-            request.setAttribute("shortDataList", shortDataList); // 날씨 정보 전달
-            request.getRequestDispatcher("/WeatherData_form.jsp").forward(request, response);
+        	// JSON 응답 설정
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(jsonData);  
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -141,11 +141,12 @@ public class WeatherController extends HttpServlet {
             String midWeatherCode = regionCodes[1];
             System.out.println(midWeatherCode);
             
-            MidWeatherInfo[] weatherData = midWeatherApi.midWeatherData(midWeatherCode);
-			
-            // jsp로 포워딩
-			request.setAttribute("weatherDataList", weatherData);
-			request.getRequestDispatcher("/MidWeatherTest.jsp").forward(request, response);
+            String jsonData = midWeatherApi.fetchDataAsJson(midWeatherCode);
+            System.out.println(jsonData);
+            // JSON 응답 설정
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(jsonData);  
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -161,11 +162,12 @@ public class WeatherController extends HttpServlet {
             String midTempCode = regionCodes[0];
             System.out.println(midTempCode);
             
-            MidTempInfo[] tempData = midTempApi.midTempData(midTempCode);
-			
-            // jsp로 포워딩
-			request.setAttribute("tempDataList", tempData);
-			request.getRequestDispatcher("/MidTempTest.jsp").forward(request, response);
+            String jsonData = midTempApi.fetchDataAsJson(midTempCode);
+            System.out.println(jsonData);
+            // JSON 응답 설정
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(jsonData);  
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

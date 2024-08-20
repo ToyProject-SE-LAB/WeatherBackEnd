@@ -20,6 +20,7 @@ import vo.MidWeatherInfo;
 public class MidWeatherApi {
     public MidWeatherInfo[] midWeatherData(String regId) throws IOException {
     	MidWeatherInfo[] weatherArray = null;
+    	
     	try {
 	    	// 현재 날짜(yyyymmddHHmm) 얻기
 			String base_date = getBaseDate(LocalDate.now(), LocalTime.now());
@@ -63,9 +64,7 @@ public class MidWeatherApi {
 	     	JSONObject body = response.getJSONObject("body");
 	     	JSONObject items = body.getJSONObject("items");
 	     	JSONArray itemArray = items.getJSONArray("item");
-	     	
-	     	weatherArray = new MidWeatherInfo[itemArray.length()];
-	     	
+
 	     	HashMap<String, String> sky = new HashMap<>(); // 하늘상태
 	     	HashMap<String, String> pop = new HashMap<>(); // 강수확률
 	     	
@@ -78,7 +77,7 @@ public class MidWeatherApi {
                 while (keys.hasNext()) {
                     String key = keys.next();
                     Object value = item.get(key);
-                    String day;
+                    String day = "";
                     String str = "";
 
                     // 하늘상태 값 저장
@@ -86,6 +85,8 @@ public class MidWeatherApi {
                         try {
                             day = key.substring(2, key.lastIndexOf("m") - 1); // 날짜
                             str = key.substring(key.lastIndexOf("m") - 1); // 오전 or 오후 저장
+                            String weatherValue = value.toString();
+                            sky.put(day + str, weatherValue);
                         } catch (Exception e) {
                             continue;
                         }
@@ -96,23 +97,21 @@ public class MidWeatherApi {
                         try {
                             day = key.substring(4, key.lastIndexOf("m") - 1);
                             str = key.substring(key.lastIndexOf("m") - 1);
+                            String weatherValue = value.toString();
+                            pop.put(day + str, weatherValue);
                         } catch (Exception e) {
                         	continue;
                         }
-                        
-                        // 값을 String으로 변환
-                        String weatherValue = value instanceof Integer ? String.valueOf((Integer) value) : value.toString();
-                        sky.put(day + str, weatherValue);
-                        pop.put(day + str, weatherValue);
                     }
                 }
             }
+            weatherArray = new MidWeatherInfo[sky.size()];
             
             int i = 0;
             for (String key : sky.keySet()) {
+            	String date = key;
                 String skyWeather = sky.get(key);
-                String date = key;
-                String popValue = pop.getOrDefault(date, "0"); // 기본값 "0"
+                String popValue = pop.getOrDefault(date, "0");
 
                 weatherArray[i] = new MidWeatherInfo(date, skyWeather, popValue);
                 i++;

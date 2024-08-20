@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ public class ShortWeatherApi {
 	}
 	
 	public ShortWeatherInfo[] fetchData(String x, String y) throws Exception {
-		List<ShortWeatherInfo> weatherList = new ArrayList<>();
+		Map<String, ShortWeatherInfo> weatherMap = new HashMap<>();
 		
     	try {    		
     		// 현재 날짜(yyyymmdd) 얻기
@@ -99,14 +99,14 @@ public class ShortWeatherApi {
 	            // 현재 시간과 12시간 후 시간 사이의 데이터만 저장
 	            if (forecastDateTime.isAfter(now) && forecastDateTime.isBefore(dayLater)) {
 	                WeatherValue weatherValue;
-	                try {
+	               try {
 	                    weatherValue = WeatherValue.valueOf(category);
 	                } catch (IllegalArgumentException e) {
 	                    // 정의되지 않은 category 값일 경우
 	                    continue;
 	                }
 
-                ShortWeatherInfo weather = new ShortWeatherInfo();
+                ShortWeatherInfo weather = weatherMap.getOrDefault(dateTimeKey, new ShortWeatherInfo());
                 weather.setDate(fcstDate);
                 weather.setTime(fcstTime);
                 
@@ -138,14 +138,14 @@ public class ShortWeatherApi {
 			    		break;
 			    }
                 // 리스트에 데이터 추가
-                weatherList.add(weather);
+			    weatherMap.put(dateTimeKey, weather);
 	            }
 			}
 
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
-    	ShortWeatherInfo[] weatherArray = weatherList.toArray(new ShortWeatherInfo[0]);
+    	ShortWeatherInfo[] weatherArray = weatherMap.values().toArray(new ShortWeatherInfo[0]);
     	return weatherArray;
     }
 	
@@ -163,13 +163,13 @@ public class ShortWeatherApi {
 		    jsonObject.put("date", info.getDate());
 		    jsonObject.put("time", info.getTime());
 		    jsonObject.put("sky", info.getSKY());
-		    jsonObject.put("pop", info.getPTY());
+		    jsonObject.put("pty", info.getPTY());
 		    jsonObject.put("pop", info.getPOP());
-		    jsonObject.put("pop", info.getTMP());
-		    jsonObject.put("pop", info.getREH());
-		    jsonObject.put("pop", info.getWSD());
-		    jsonObject.put("pop", info.getTMN());
-		    jsonObject.put("pop", info.getTMX());
+		    jsonObject.put("tmp", info.getTMP());
+		    jsonObject.put("reh", info.getREH());
+		    jsonObject.put("wsd", info.getWSD());
+		    jsonObject.put("tmn", info.getTMN());
+		    jsonObject.put("tmx", info.getTMX());
 		    jsonArray.put(jsonObject);
 		}
 

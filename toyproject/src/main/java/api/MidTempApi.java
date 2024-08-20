@@ -65,9 +65,7 @@ public class MidTempApi {
 	     	JSONObject body = response.getJSONObject("body");
 	     	JSONObject items = body.getJSONObject("items");
 	     	JSONArray itemArray = items.getJSONArray("item");
-	     	
-	     	tempArray = new MidTempInfo[itemArray.length()];
-	     	
+
 	     	HashMap<String, String> taMax = new HashMap<>(); // 최고기온
 	     	HashMap<String, String> taMin = new HashMap<>(); // 최저기온
 	     	
@@ -105,6 +103,7 @@ public class MidTempApi {
                     }
                 }
             }
+            tempArray = new MidTempInfo[taMax.size()];
             
             // 배열에 데이터 저장
             int i = 0;
