@@ -9,10 +9,8 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,8 +20,8 @@ import org.json.JSONObject;
 import vo.MidTempInfo;
 
 public class MidTempApi {
-	public List<MidTempInfo> midTempData(String regId) throws IOException {
-    	List<MidTempInfo> tempList = new ArrayList<>();
+	public MidTempInfo[] midTempData(String regId) throws IOException {
+		MidTempInfo[] tempArray = null;
     	try {
 	    	// 현재 날짜(yyyymmdd) 얻기
 			String base_date = getBaseDate(LocalDate.now(), LocalTime.now());
@@ -68,6 +66,8 @@ public class MidTempApi {
 	     	JSONObject items = body.getJSONObject("items");
 	     	JSONArray itemArray = items.getJSONArray("item");
 	     	
+	     	tempArray = new MidTempInfo[itemArray.length()];
+	     	
 	     	HashMap<String, String> taMax = new HashMap<>(); // 최고기온
 	     	HashMap<String, String> taMin = new HashMap<>(); // 최저기온
 	     	
@@ -75,7 +75,7 @@ public class MidTempApi {
 	     	Pattern taMaxPattern = Pattern.compile("taMax(\\d+)$");
             Pattern taMinPattern = Pattern.compile("taMin(\\d+)$");
             
-	     	// 파싱 및 HashMap에 저장
+	     	// HashMap에 저장
             for (int i = 0; i < itemArray.length(); i++) {
                 JSONObject item = itemArray.getJSONObject(i);
                 Iterator<String> keys = item.keys();
@@ -106,20 +106,21 @@ public class MidTempApi {
                 }
             }
             
-            // 데이터 정리
+            // 배열에 데이터 저장
+            int i = 0;
             for (String key : taMax.keySet()) {
                 String date = key;
                 String tempMax = taMax.getOrDefault(key, "N/A");
                 String tempMin = taMin.getOrDefault(key, "N/A");
 
-                MidTempInfo tempInfo = new MidTempInfo(date, tempMax, tempMin);
-                tempList.add(tempInfo);
+                tempArray[i] = new MidTempInfo(date, tempMax, tempMin);
+                i++;
             }
 
     	} catch(Exception e) {
     		e.printStackTrace();
     	}
-    	return tempList;
+    	return tempArray;
     }
 
 	private String getBaseDate(LocalDate currentDate, LocalTime currentTime) {

@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,11 +25,8 @@ public class ShortWeatherApi {
 		SKY, PTY, POP, TMP, REH, WSD, TMN, TMX
 	}
 	
-	public Map<String, ShortWeatherInfo> fetchData(String x, String y) throws Exception {
-		System.out.println("ShortWeatherApi() 실행");
-		
-		// 시간순으로 데이터 저장
-        Map<String, ShortWeatherInfo> forecastData = new TreeMap<>();
+	public ShortWeatherInfo[] fetchData(String x, String y) throws Exception {
+		List<ShortWeatherInfo> weatherList = new ArrayList<>();
 		
     	try {    		
     		// 현재 날짜(yyyymmdd) 얻기
@@ -85,7 +82,8 @@ public class ShortWeatherApi {
 	        // 현재 시간과 12시간 후 시간 계산
 	        LocalDateTime now = LocalDateTime.now().minusHours(1);
 	        LocalDateTime dayLater = now.plusHours(24);
-				        
+			DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd HHmm");
+	        
 			for (int i = 0; i < itemArray.length(); i++) {
 				JSONObject item = itemArray.getJSONObject(i);
 				String fcstDate = item.getString("fcstDate"); // 날짜
@@ -93,7 +91,6 @@ public class ShortWeatherApi {
                 String fcstValue = item.getString("fcstValue"); // 예보 값
 			    String category = item.getString("category"); // 자료구분문자
 			    String dateTimeKey = fcstDate + " " + fcstTime;
-			    DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd HHmm");
 
 			    
 			    // 날짜 및 시간을 LocalDateTime으로 변환
@@ -109,7 +106,9 @@ public class ShortWeatherApi {
 	                    continue;
 	                }
 
-                ShortWeatherInfo weather = forecastData.getOrDefault(dateTimeKey, new ShortWeatherInfo());
+                ShortWeatherInfo weather = new ShortWeatherInfo();
+                weather.setDate(fcstDate);
+                weather.setTime(fcstTime);
                 
                 // 데이터를 해당 필드에 저장
 			    switch(weatherValue) {
@@ -138,17 +137,16 @@ public class ShortWeatherApi {
 			    		weather.setTMX(fcstValue);
 			    		break;
 			    }
-			    
-			    weather.setDate(fcstDate);
-                weather.setTime(fcstTime);
-
-                forecastData.put(dateTimeKey, weather);
+                // 리스트에 데이터 추가
+                weatherList.add(weather);
 	            }
 			}
+
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
-    	return forecastData;
+    	ShortWeatherInfo[] weatherArray = weatherList.toArray(new ShortWeatherInfo[0]);
+    	return weatherArray;
     }
 
 	// 현재 시각을 기준으로 base_time 구하기

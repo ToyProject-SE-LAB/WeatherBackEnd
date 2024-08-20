@@ -9,11 +9,8 @@ import java.net.URLEncoder;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,8 +18,8 @@ import org.json.JSONObject;
 import vo.MidWeatherInfo;
 
 public class MidWeatherApi {
-    public List<MidWeatherInfo> midWeatherData(String regId) throws IOException {
-    	List<MidWeatherInfo> weatherList = new ArrayList<>();
+    public MidWeatherInfo[] midWeatherData(String regId) throws IOException {
+    	MidWeatherInfo[] weatherArray = null;
     	try {
 	    	// 현재 날짜(yyyymmddHHmm) 얻기
 			String base_date = getBaseDate(LocalDate.now(), LocalTime.now());
@@ -67,10 +64,12 @@ public class MidWeatherApi {
 	     	JSONObject items = body.getJSONObject("items");
 	     	JSONArray itemArray = items.getJSONArray("item");
 	     	
+	     	weatherArray = new MidWeatherInfo[itemArray.length()];
+	     	
 	     	HashMap<String, String> sky = new HashMap<>(); // 하늘상태
 	     	HashMap<String, String> pop = new HashMap<>(); // 강수확률
 	     	
-	     	// 파싱 및 HashMap에 저장
+	     	// HashMap에 저장
             for (int i = 0; i < itemArray.length(); i++) {
                 JSONObject item = itemArray.getJSONObject(i);
                 Iterator<String> keys = item.keys();
@@ -109,18 +108,19 @@ public class MidWeatherApi {
                 }
             }
             
+            int i = 0;
             for (String key : sky.keySet()) {
                 String skyWeather = sky.get(key);
                 String date = key;
                 String popValue = pop.getOrDefault(date, "0"); // 기본값 "0"
 
-                MidWeatherInfo weatherInfo = new MidWeatherInfo(date, skyWeather, popValue);
-                weatherList.add(weatherInfo);
+                weatherArray[i] = new MidWeatherInfo(date, skyWeather, popValue);
+                i++;
             }
     	} catch(Exception e) {
     		e.printStackTrace();
     	}
-    	return weatherList;
+    	return weatherArray;
     }
 
 	private String getBaseDate(LocalDate currentDate, LocalTime currentTime) {

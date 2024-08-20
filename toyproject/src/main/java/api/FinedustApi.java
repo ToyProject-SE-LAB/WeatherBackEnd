@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,9 +14,9 @@ import vo.FinedustInfo;
 
 
 public class FinedustApi {
-	public List<FinedustInfo> fetchData(String stationName) throws IOException {
+	public FinedustInfo[] fetchData(String stationName) throws IOException {
 		// 리스트 생성
-    	List<FinedustInfo> dataList = new ArrayList<>();
+    	FinedustInfo[] finedustArray = null;
 		
 		try {
 	        StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty"); /*URL*/
@@ -64,6 +62,8 @@ public class FinedustApi {
 			JSONObject body = response.getJSONObject("body");
 	        JSONArray items = body.getJSONArray("items");
 
+	        finedustArray = new FinedustInfo[items.length()];
+	        
 	        for (int i = 0; i < items.length(); i++) {
 	            JSONObject item = items.getJSONObject(i);
 	            String date = item.getString("dataTime"); // 측정일
@@ -71,11 +71,11 @@ public class FinedustApi {
 	            String pm25Grade = item.getString("pm25Grade"); // 초미세먼지 등급
 
 	            FinedustInfo finedustInfo = new FinedustInfo(date, pm10Grade, pm25Grade);
-                dataList.add(finedustInfo);
+                finedustArray[i] = finedustInfo;
 	        }
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
-		return dataList;
+		return finedustArray;
     }
 }

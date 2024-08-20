@@ -1,8 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -102,10 +100,10 @@ public class WeatherController extends HttpServlet {
             String stationName = finedustStationApi.fetchData(x, y); // 측정소명
             
 
-            List<FinedustInfo> dataList = finedustApi.fetchData(stationName);
+            FinedustInfo[] finedustData = finedustApi.fetchData(stationName);
     			
             // jsp로 포워딩
-    		request.setAttribute("dataList", dataList);
+    		request.setAttribute("dataList", finedustData);
     		request.getRequestDispatcher("/FinedustData_form.jsp").forward(request, response);       
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -123,7 +121,7 @@ public class WeatherController extends HttpServlet {
 	        String y = String.valueOf(coord.getY());
 	        
             // 날씨 정보를 가져온다.
-        	Map<String, ShortWeatherInfo> shortDataList = shortWeatherApi.fetchData(x, y);
+        	ShortWeatherInfo[] shortDataList = shortWeatherApi.fetchData(x, y);
         	
             // JSP로 데이터 포워딩
             request.setAttribute("shortDataList", shortDataList); // 날씨 정보 전달
@@ -144,10 +142,10 @@ public class WeatherController extends HttpServlet {
             String midWeatherCode = regionCodes[1];
             System.out.println(midWeatherCode);
             
-            List<MidWeatherInfo> weatherDataList = midWeatherApi.midWeatherData(midWeatherCode);
+            MidWeatherInfo[] weatherData = midWeatherApi.midWeatherData(midWeatherCode);
 			
             // jsp로 포워딩
-			request.setAttribute("weatherDataList", weatherDataList);
+			request.setAttribute("weatherDataList", weatherData);
 			request.getRequestDispatcher("/MidWeatherTest.jsp").forward(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -164,10 +162,10 @@ public class WeatherController extends HttpServlet {
             String midTempCode = regionCodes[0];
             System.out.println(midTempCode);
             
-            List<MidTempInfo> tempDataList = midTempApi.midTempData(midTempCode);
+            MidTempInfo[] tempData = midTempApi.midTempData(midTempCode);
 			
             // jsp로 포워딩
-			request.setAttribute("tempDataList", tempDataList);
+			request.setAttribute("tempDataList", tempData);
 			request.getRequestDispatcher("/MidTempTest.jsp").forward(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
