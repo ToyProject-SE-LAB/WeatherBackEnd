@@ -59,7 +59,7 @@ public class RegionCode {
 
         System.out.println("기온코드: " + tempCode);
         System.out.println("육상코드: " + weatherCode);
-        return new String[]{tempCode, weatherCode};
+        return new String[]{tempCode, weatherCode, regionName};
     }
 
     // 지역명에 해당하는 지역코드 반환

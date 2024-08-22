@@ -133,9 +133,8 @@ public class MidTempApi {
 		JSONArray jsonArray = new JSONArray();
 		for (MidTempInfo info : tempArray) {
 			JSONObject jsonObject = new JSONObject();
-		    jsonObject.put("date", info.getDate());
-		    jsonObject.put("taMax", info.getTaMax());
-		    jsonObject.put("taMin", info.getTaMin());
+		    jsonObject.put("high", info.getTaMax());
+		    jsonObject.put("low", info.getTaMin());
 		    jsonArray.put(jsonObject);
 		}
 

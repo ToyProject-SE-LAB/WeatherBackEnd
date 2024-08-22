@@ -2,13 +2,11 @@ package vo;
 
 public class MidWeatherInfo {
     private String date; // 예보날짜(오전, 오후)
-    private String sky; // 하늘상태
-    private String pop; // 강수확률
+    private String weather; // 하늘상태
 
-    public MidWeatherInfo(String date, String sky, String pop) {
+    public MidWeatherInfo(String date, String weather) {
     	this.date = date;
-    	this.sky = sky;
-    	this.pop = pop;
+    	this.weather = weather;
     }
     
     public String getDate() {
@@ -21,27 +19,12 @@ public class MidWeatherInfo {
 	}
 
 
-	public String getSky() {
-		return sky;
+	public String getWeather() {
+		return weather;
 	}
 
 
-	public void setSky(String sky) {
-		this.sky = sky;
+	public void setWeather(String weather) {
+		this.weather = weather;
 	}
-
-
-	public String getPop() {
-		return pop;
-	}
-
-
-	public void setPop(String pop) {
-		this.pop = pop;
-	}
-
-    @Override
-    public String toString() {
-        return "date=" + date + ", sky=" + sky + ", pop=" + pop + "";
-    }
 }

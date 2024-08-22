@@ -90,7 +90,6 @@ public class FinedustApi {
 	    JSONArray jsonArray = new JSONArray();
 	    	for (FinedustInfo info : finedustArray) {
 	    		JSONObject jsonObject = new JSONObject();
-	            jsonObject.put("date", info.getDate());
 	            jsonObject.put("pm10Grade", info.getPm10Grade());
 	            jsonObject.put("pm25Grade", info.getPm25Grade());
 	            jsonArray.put(jsonObject);

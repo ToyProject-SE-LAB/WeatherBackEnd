@@ -20,34 +20,24 @@
                     var longitude = position.coords.longitude;
 
                     // 서블릿으로 get 요청 보내기
-                    //var shortWeatherUrl = "shortweather?latitude=" + encodeURIComponent(latitude) + "&longitude=" + encodeURIComponent(longitude);
-                    //var midWeatherUrl = "midweather?latitude=" + encodeURIComponent(latitude) + "&longitude=" + encodeURIComponent(longitude);
-                    //var midTempUrl = "midtemp?latitude=" + encodeURIComponent(latitude) + "&longitude=" + encodeURIComponent(longitude);
-                    var finedustUrl = "finedust?latitude=" + encodeURIComponent(latitude) + "&longitude=" + encodeURIComponent(longitude);
+                    var weatherUrl = "Weather?latitude=" + encodeURIComponent(latitude) + "&longitude=" + encodeURIComponent(longitude);
 
-                    // 비동기적으로 요청 보내기
-                    Promise.all([
-                        //fetch(shortWeatherUrl).then(response => response.text()),
-                        //fetch(midWeatherUrl).then(response => response.text()),   
-                        //fetch(midTempUrl).then(response => response.text()),      
-                        fetch(finedustUrl).then(response => response.text())      
-                    ])
-                    
-                    .then((finedustData) => {
-                        // 모든 요청이 성공적으로 완료된 후 처리
-                        console.log('Short Weather Data:', finedustData);
-                        
-                    
-                    //.then(([shortWeatherData, midWeatherData, midTempData, finedustData]) => {
-                        // 모든 요청이 성공적으로 완료된 후 처리
-                        //console.log('Short Weather Data:', shortWeatherData);
-                        //console.log('Mid Weather Data:', midWeatherData);
-                        //console.log('Mid Temp Data:', midTempData);
-                        //console.log('Finedust Data:', finedustData);
+                 // 비동기적으로 요청 보내기
+                    fetch(weatherUrl)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json(); // JSON 형태로 응답 처리
+                        })
+                        .then(data => {
+                            // 모든 요청이 성공적으로 완료된 후 처리
+                            console.log('Weather Data:', data);
 
-                        // 예: shortWeatherData를 기반으로 리디렉션
-                        //window.location.href = shortWeatherUrl;
-                    })
+                            // 결과를 페이지에 표시 (예시)
+                            document.getElementById("status").innerText = "Weather Data Loaded!";
+                            // 예: 데이터를 페이지에 추가하는 코드 (필요에 따라 추가)
+                        })
                     .catch(error => {
                         console.error('Error:', error);
                         document.getElementById("status").innerText = "An error occurred.";

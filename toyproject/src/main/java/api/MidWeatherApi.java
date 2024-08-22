@@ -6,11 +6,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -65,10 +66,9 @@ public class MidWeatherApi {
 	     	JSONObject items = body.getJSONObject("items");
 	     	JSONArray itemArray = items.getJSONArray("item");
 
-	     	HashMap<String, String> sky = new HashMap<>(); // 하늘상태
-	     	HashMap<String, String> pop = new HashMap<>(); // 강수확률
+	     	Map<String, String> sky = new TreeMap<>(); // 하늘상태
 	     	
-	     	// HashMap에 저장
+	     	// TreeMap에 저장
             for (int i = 0; i < itemArray.length(); i++) {
                 JSONObject item = itemArray.getJSONObject(i);
                 Iterator<String> keys = item.keys();
@@ -85,22 +85,12 @@ public class MidWeatherApi {
                         try {
                             day = key.substring(2, key.lastIndexOf("m") - 1); // 날짜
                             str = key.substring(key.lastIndexOf("m") - 1); // 오전 or 오후 저장
-                            String weatherValue = value.toString();
-                            sky.put(day + str, weatherValue);
+                            if (str.equals("Pm")) { // 오후 데이터만 필터링
+                                String weatherValue = value.toString();
+                                sky.put(day, weatherValue);
+                            }
                         } catch (Exception e) {
                             continue;
-                        }
-                    }
-
-                    // 강수확률 값 저장
-                    if (key.startsWith("rnSt")) {
-                        try {
-                            day = key.substring(4, key.lastIndexOf("m") - 1);
-                            str = key.substring(key.lastIndexOf("m") - 1);
-                            String weatherValue = value.toString();
-                            pop.put(day + str, weatherValue);
-                        } catch (Exception e) {
-                        	continue;
                         }
                     }
                 }
@@ -110,10 +100,9 @@ public class MidWeatherApi {
             int i = 0;
             for (String key : sky.keySet()) {
             	String date = key;
-                String skyWeather = sky.get(key);
-                String popValue = pop.getOrDefault(date, "0");
+                String weather = sky.get(key);
 
-                weatherArray[i] = new MidWeatherInfo(date, skyWeather, popValue);
+                weatherArray[i] = new MidWeatherInfo(date, weather);
                 i++;
             }
     	} catch(Exception e) {
@@ -133,9 +122,7 @@ public class MidWeatherApi {
 		JSONArray jsonArray = new JSONArray();
 		for (MidWeatherInfo info : weatherArray) {
 			JSONObject jsonObject = new JSONObject();
-		    jsonObject.put("date", info.getDate());
-		    jsonObject.put("sky", info.getSky());
-		    jsonObject.put("pop", info.getPop());
+		    jsonObject.put("weather", info.getWeather());
 		    jsonArray.put(jsonObject);
 		}
 

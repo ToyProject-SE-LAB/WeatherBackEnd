@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,11 +23,11 @@ public class ShortWeatherApi {
 	
 	// 기상 데이터 종류
 	enum WeatherValue {
-		SKY, PTY, POP, TMP, REH, WSD, TMN, TMX
+		SKY, PTY, TMP, WSD, VEC, TMN, TMX
 	}
 	
 	public ShortWeatherInfo[] fetchData(String x, String y) throws Exception {
-		Map<String, ShortWeatherInfo> weatherMap = new HashMap<>();
+		Map<String, ShortWeatherInfo> weatherMap = new TreeMap<>();
 		
     	try {    		
     		// 현재 날짜(yyyymmdd) 얻기
@@ -72,6 +73,20 @@ public class ShortWeatherApi {
 	        
 	        //System.out.println(sb.toString());
 	        
+	        // 하늘상태 코드
+	        Map<String, String> skyCodeMap = new HashMap<>();
+	        skyCodeMap.put("1", "맑음");
+	        skyCodeMap.put("3", "구름많음");
+	        skyCodeMap.put("4", "흐림");
+
+	        // 강수형태 코드
+	        Map<String, String> ptyCodeMap = new HashMap<>();
+	        ptyCodeMap.put("0", "없음");
+	        ptyCodeMap.put("1", "비");
+	        ptyCodeMap.put("2", "비/눈");
+	        ptyCodeMap.put("3", "눈");
+	        ptyCodeMap.put("4", "소나기");
+	        
 	        // 데이터 파싱
 			JSONObject jsonObject = new JSONObject(sb.toString());
 			JSONObject response = jsonObject.getJSONObject("response");
@@ -79,10 +94,10 @@ public class ShortWeatherApi {
 			JSONObject items = body.getJSONObject("items");
 	        JSONArray itemArray = items.getJSONArray("item");
 	        
-	        // 현재 시간과 12시간 후 시간 계산
-	        LocalDateTime now = LocalDateTime.now().minusHours(1);
-	        LocalDateTime dayLater = now.plusHours(24);
-			DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd HHmm");
+	        // 현재 시간과 48시간 후 시간 계산
+	        DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+	        LocalDateTime baseDateTime = LocalDateTime.parse(base_date+base_time, FORMATTER);
+	        LocalDateTime dayLater = baseDateTime.plusHours(48);
 	        
 			for (int i = 0; i < itemArray.length(); i++) {
 				JSONObject item = itemArray.getJSONObject(i);
@@ -90,14 +105,14 @@ public class ShortWeatherApi {
                 String fcstTime = item.getString("fcstTime"); // 시간
                 String fcstValue = item.getString("fcstValue"); // 예보 값
 			    String category = item.getString("category"); // 자료구분문자
-			    String dateTimeKey = fcstDate + " " + fcstTime;
+			    String dateTimeKey = fcstDate + fcstTime;
 
 			    
 			    // 날짜 및 시간을 LocalDateTime으로 변환
 	            LocalDateTime forecastDateTime = LocalDateTime.parse(dateTimeKey, FORMATTER);
 
-	            // 현재 시간과 12시간 후 시간 사이의 데이터만 저장
-	            if (forecastDateTime.isAfter(now) && forecastDateTime.isBefore(dayLater)) {
+	            // 측정 시간과 48시간 후 시간 사이의 데이터만 저장
+	            if (forecastDateTime.isAfter(baseDateTime) && forecastDateTime.isBefore(dayLater)) {
 	                WeatherValue weatherValue;
 	               try {
 	                    weatherValue = WeatherValue.valueOf(category);
@@ -107,36 +122,40 @@ public class ShortWeatherApi {
 	                }
 
                 ShortWeatherInfo weather = weatherMap.getOrDefault(dateTimeKey, new ShortWeatherInfo());
-                weather.setDate(fcstDate);
-                weather.setTime(fcstTime);
+                String description = weather.getDescription();
+                weather.setDate(dateTimeKey);
                 
                 // 데이터를 해당 필드에 저장
 			    switch(weatherValue) {
-			    	case SKY: // 하늘상태
-			    		weather.setSKY(fcstValue);
+			    	case SKY: // 하늘 상태
+			    		description = skyCodeMap.getOrDefault(fcstValue, "알 수 없음");
 			    		break;
-			    	case PTY: // 강수형태
-			    		weather.setPTY(fcstValue);
-			    		break;
-			    	case POP: // 강수확률
-			    		weather.setPOP(fcstValue);
+			    	case PTY: // 강수 형태
+			    		String ptyValue = ptyCodeMap.getOrDefault(fcstValue, "알 수 없음");
+			    		description = description.isEmpty() ? ptyValue : description + ", " + ptyValue;
 			    		break;
 			    	case TMP: // 온도
-			    		weather.setTMP(fcstValue);
+			    		weather.setTemp(fcstValue);
 			    		break;
-			    	case REH: //습도
-			    		weather.setREH(fcstValue);
+			    	case VEC: // 풍향
+			    		weather.setVec(fcstValue);
 			    		break;
 			    	case WSD: // 풍속
-			    		weather.setWSD(fcstValue);
+			    		weather.setWsd(fcstValue);
 			    		break;
 			    	case TMN: // 일 최저기온
-			    		weather.setTMN(fcstValue);
+			    		weather.setLow(fcstValue);
 			    		break;
 			    	case TMX: // 일 최고기온
-			    		weather.setTMX(fcstValue);
+			    		weather.setHigh(fcstValue);
 			    		break;
 			    }
+			    
+			    // sky와 pty값을 결합
+			    if(weatherValue == WeatherValue.SKY || weatherValue == WeatherValue.PTY) {
+			    	weather.setDescription(description);
+			    }
+			    
                 // 리스트에 데이터 추가
 			    weatherMap.put(dateTimeKey, weather);
 	            }
@@ -160,16 +179,13 @@ public class ShortWeatherApi {
 		JSONArray jsonArray = new JSONArray();
 		for (ShortWeatherInfo info : weatherArray) {
 			JSONObject jsonObject = new JSONObject();
-		    jsonObject.put("date", info.getDate());
-		    jsonObject.put("time", info.getTime());
-		    jsonObject.put("sky", info.getSKY());
-		    jsonObject.put("pty", info.getPTY());
-		    jsonObject.put("pop", info.getPOP());
-		    jsonObject.put("tmp", info.getTMP());
-		    jsonObject.put("reh", info.getREH());
-		    jsonObject.put("wsd", info.getWSD());
-		    jsonObject.put("tmn", info.getTMN());
-		    jsonObject.put("tmx", info.getTMX());
+			jsonObject.put("date", info.getDate());
+		    jsonObject.put("description", info.getDescription());
+		    jsonObject.put("temp", info.getTemp());
+		    jsonObject.put("wsd", info.getWsd());
+		    jsonObject.put("vec", info.getVec());
+		    jsonObject.put("low", info.getLow());
+		    jsonObject.put("high", info.getHigh());
 		    jsonArray.put(jsonObject);
 		}
 
