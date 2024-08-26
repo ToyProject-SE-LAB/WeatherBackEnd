@@ -16,11 +16,11 @@
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                     // 성공적으로 위치를 얻은 경우, 위도와 경도를 서블릿으로 전송
-                    var latitude = position.coords.latitude;
-                    var longitude = position.coords.longitude;
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
 
                     // 서블릿으로 get 요청 보내기
-                    var weatherUrl = "Weather?latitude=" + encodeURIComponent(latitude) + "&longitude=" + encodeURIComponent(longitude);
+                    var weatherUrl = "Weather?lat=" + encodeURIComponent(lat) + "&lng=" + encodeURIComponent(lng);
 
                  // 비동기적으로 요청 보내기
                     fetch(weatherUrl)

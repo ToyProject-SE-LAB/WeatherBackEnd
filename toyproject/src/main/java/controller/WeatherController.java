@@ -61,8 +61,8 @@ public class WeatherController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 try {
 		        // 위도와 경도 추출
-		        double latitude = Double.parseDouble(request.getParameter("latitude"));
-		        double longitude = Double.parseDouble(request.getParameter("longitude"));
+		        double latitude = Double.parseDouble(request.getParameter("lat"));
+		        double longitude = Double.parseDouble(request.getParameter("lng"));
 
 		        // 위도와 경도를 x, y 좌표로 변환
 		        Coordinate.Coord coord = Coordinate.convertLatLonToXY(latitude, longitude);
@@ -132,11 +132,6 @@ public class WeatherController extends HttpServlet {
 	            // 오늘과 내일의 날짜를 LocalDate로 정의
 	            LocalDate todayDate = LocalDate.now();
 	            LocalDate tomorrowDate = todayDate.plusDays(1);
-
-	            // 날짜 포맷 정의
-	            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	            String today = todayDate.format(dateFormatter);
-	            String tomorrow = tomorrowDate.format(dateFormatter);
 	            
 	            // 일일 최저 및 최고 온도
 	            String todayLow = "";
