@@ -59,6 +59,8 @@ public class WeatherController extends HttpServlet {
  
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("test");
+		request.setCharacterEncoding("UTF-8");
 		 try {
 		        // 위도와 경도 추출
 		        double latitude = Double.parseDouble(request.getParameter("lat"));
