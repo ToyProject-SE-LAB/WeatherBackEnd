@@ -66,6 +66,8 @@ public class WeatherController extends HttpServlet {
 		        double latitude = Double.parseDouble(request.getParameter("lat"));
 		        double longitude = Double.parseDouble(request.getParameter("lng"));
 
+		       System.out.println(longitude+" "+latitude);
+		        
 		        // 위도와 경도를 x, y 좌표로 변환
 		        Coordinate.Coord coord = Coordinate.convertLatLonToXY(latitude, longitude);
 		        String x = String.valueOf(coord.getX());
